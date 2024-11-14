@@ -9,18 +9,10 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/**")
-                .allowedOrigins("http://localhost:3000")  // Allow requests from React dev server
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
-                .allowCredentials(true);
-//                .allowedOrigins("http://<YOUR_S3_OR_EC2_URL>")
+        registry.addMapping("/**")  // Allows all endpoints
+                .allowedOrigins("http://localhost:3000")  // Allow frontend to make requests
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")  // Allowed HTTP methods
+                .allowedHeaders("*")  // Allow any headers
+                .allowCredentials(true);  // Allow credentials (like cookies or JWTs)
     }
-
-//    @Override
-//    public void addCorsMappings(CorsRegistry registry) {
-//        registry.addMapping("/**")
-//                .allowedOrigins("https://gentle-tree-06286ba10.5.azurestaticapps.net/")
-//                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
-//    }
 }

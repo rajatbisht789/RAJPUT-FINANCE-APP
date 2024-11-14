@@ -14,4 +14,5 @@ public class User {
     private String phoneNumber;
     private String userName;
     private boolean isAdmin;
+    private String profileImage;
 }
