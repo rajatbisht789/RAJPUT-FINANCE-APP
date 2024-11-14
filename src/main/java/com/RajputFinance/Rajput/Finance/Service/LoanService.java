@@ -44,6 +44,8 @@ public class LoanService {
             newUser.setPhoneNumber(loan.getCustomerPhoneNumber());
             newUser.setAdmin(false);
             userService.createNewUser(newUser);
+        }else{
+            updateUserDetailsInAllTheLoans(response, response);
         }
         return response;
     }
@@ -51,13 +53,26 @@ public class LoanService {
     public Loan updateLoan(String loanNumber, Loan loan) {
         Loan existingLoan = loanRepository.findByLoanNumber(loanNumber).orElse(null);
         if (existingLoan != null) {
+            updateUserDetailsInAllTheLoans(existingLoan, loan);
             loan.setId(existingLoan.getId());
             Loan response = loanRepository.save(loan);
-//            repaymentService.deleteAllRepaymentsByLoanNumber(loanNumber);
-//            createRepayment(loan, response);
             return response;
         }
         return null;
+    }
+
+    private void updateUserDetailsInAllTheLoans(Loan existingLoan, Loan updatedValue){
+        User updateUser = userService.getUserByPhoneNumber(existingLoan.getCustomerPhoneNumber());
+        updateUser.setUserName(updatedValue.getCustomerName());
+        updateUser.setPhoneNumber(updatedValue.getCustomerPhoneNumber());
+
+        List<Loan> allOldLoan = getAllLoansByPhoneNumber(existingLoan.getCustomerPhoneNumber());
+        allOldLoan.stream().forEach(i->{
+            i.setCustomerName(updatedValue.getCustomerName());
+            i.setCustomerPhoneNumber(updatedValue.getCustomerPhoneNumber());
+        });
+        loanRepository.saveAll(allOldLoan);
+        userService.updateUser(updateUser);
     }
 
     private void createRepayment(Loan loan, Loan response) {

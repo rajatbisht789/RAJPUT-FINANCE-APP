@@ -38,8 +38,6 @@ public class LoanController {
         return loanService.getLoanDetailsWithRepaymentSchedule(loanNumber);
     }
 
-
-
     @PostMapping
     public Loan createLoan(@RequestBody Loan loan) {
         return loanService.createLoan(loan);
